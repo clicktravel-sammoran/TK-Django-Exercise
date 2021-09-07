@@ -4,7 +4,7 @@ from django.db import models
 class Recipe(models.Model):
     """Recipe objects"""
 
-    name = models.TextField(blank=False)
+    name = models.CharField(max_length=255)
     description = models.TextField(blank=False)
 
     def __str__(self):
@@ -14,7 +14,7 @@ class Recipe(models.Model):
 class Ingredient(models.Model):
     """Ingredient to be used in a recipe"""
 
-    name = models.TextField(blank=False)
+    name = models.CharField(max_length=255)
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,

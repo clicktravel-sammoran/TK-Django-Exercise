@@ -41,23 +41,22 @@ class RecipeApiTests(TestCase):
     def test_get_all_recipes(self):
         """GET /recipes/ - Test returning a list of recipes"""
 
-        sample_recipe()
-        recipe = sample_recipe({
+        recipe1 = sample_recipe({
             'name': 'Bangers and Mash',
             'description': 'A hearty meal'
         })
 
-        recipe.ingredients.add(
-            sample_ingredient(recipe=recipe, name='Sausage'))
-
-        all_recipes = Recipe.objects.all().order_by('id')
-        serializer = RecipeSerializer(all_recipes, many=True)
+        recipe2 = sample_recipe({
+            'name': 'Chips and peas',
+            'description': 'A basic meal'
+        })
 
         response = self.client.get(RECIPES_URL)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 2)
-        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(response.data[0].get('name'), recipe1.name)
+        self.assertEqual(response.data[1].get('name'), recipe2.name)
 
     def test_get_all_recipes_with_name_filter(self):
         sample_recipe()
@@ -139,10 +138,9 @@ class RecipeApiTests(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        recipe = Recipe.objects.get(id=response.data['id'])
-        ingredients = recipe.ingredients.all()
-
-        self.assertEqual(ingredients.count(), 2)
+        number_of_ingredients = \
+            Ingredient.objects.filter(recipe__id=response.data["id"]).count()
+        self.assertEqual(number_of_ingredients, 2)
 
     def test_create_recipe_invalid_request(self):
         """Test creating a new recipe with invalid payload"""
