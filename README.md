@@ -49,8 +49,6 @@ The following endpoints are available:
   - **POST** /recipes/
 - Edit a recipe
   - **PATCH** /recipes/`<id>`/
-- Partially edit a recipe
-  - **PUT** /recipes/`<id>`/
 - Delete a recipe
   - **DELETE** /recipes/`<id>`/
 
